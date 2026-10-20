@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "k8s-platform.fullname" . }}-content
+  labels:
+    {{- include "k8s-platform.labels" . | nindent 4 }}
+data:
+  index.html: |
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{{ .Values.landingPage.title }}</title>
+    </head>
+    <body>
+      <h1>{{ .Values.landingPage.title }}</h1>
+      <p>{{ .Values.landingPage.message }}</p>
+      <p>Managed with Kubernetes and Helm.</p>
+    </body>
+    </html>

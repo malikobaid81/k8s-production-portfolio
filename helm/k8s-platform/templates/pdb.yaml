@@ -1,0 +1,14 @@
+# A PodDisruptionBudget helps control how many Pods may be voluntarily disrupted at a time.
+{{- if .Values.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "k8s-platform.fullname" . }}
+  labels:
+    {{- include "k8s-platform.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "k8s-platform.selectorLabels" . | nindent 6 }}
+{{- end }}
