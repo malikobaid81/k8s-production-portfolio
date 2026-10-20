@@ -2,7 +2,6 @@
 charts/
 *.tgz
 *.lock
-values*.yaml
 tmp/
 helm-cache/
 helm-config/

@@ -1,0 +1,81 @@
+replicaCount: 3
+
+image:
+  repository: nginxinc/nginx-unprivileged
+  tag: stable-alpine
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+
+landingPage:
+  title: "Kubernetes Platform Portfolio"
+  message: "This application is running on Kubernetes."
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+probes:
+  startup:
+    enabled: true
+    path: /
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    enabled: true
+    path: /
+    periodSeconds: 5
+  liveness:
+    enabled: true
+    path: /
+    periodSeconds: 10
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
+
+ingress:
+  enabled: false
+  className: nginx
+  hosts:
+    - host: app.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  annotations: {}
+
+networkPolicy:
+  enabled: false
+  ingressNamespace: ingress-nginx
+
+serviceAccount:
+  create: true
+  automountServiceAccountToken: false
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 101
+  runAsGroup: 101
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
